@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-from component import Component
+
+from .component import Component
 
 # Read data using pd.read_csv() - slow, but in system we'll get data in real time
 
