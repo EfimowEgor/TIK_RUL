@@ -16,7 +16,9 @@ def fill_empty(data: pd.DataFrame):
 
 def transform_header(data: pd.DataFrame) -> pd.DataFrame:
     """
-    data: Датафрейм, считанный из файла конфигуратора
+    data: Датафрейм, считанный из файла конфигуратора.
+
+    Преобразование данных из конфигуратора в формат: дата, сигнал1, сигнал2, ..., сигнал N
     """
 
     data = pd.concat([pd.DataFrame([data.columns], columns=data.columns), data],
@@ -48,6 +50,11 @@ def transform_header(data: pd.DataFrame) -> pd.DataFrame:
     return signal_values
 
 def split(names: list[str]) -> dict[str, list[str]]:
+    """
+    names: имена столбцов датафрейма
+
+    Разбивает направления и номера сигналов по агрегатам. Подробнее структура описана в obsidian/Work/Data/Разбивка данных по компонентам агрегата.md
+    """
     name_groups = dict()
     # format of names[i]: name acronym number metric name, join last 2 (or just drop)
     splitted_names = [elem.split() for elem in names]
@@ -61,6 +68,12 @@ def split(names: list[str]) -> dict[str, list[str]]:
 
 def group(splitted_data: dict[str, list[str]],
           data: pd.DataFrame) -> dict[str, dict[str, list[tuple | np.ndarray]]]:
+    """
+    splitted_data: Данные полученные из split().\n
+    data: Датафрейм, со значениями сигналов
+
+    Группировка данных по агреграту и составляющим агрегата. Подробнее структура описана в obsidian/Work/Data/Разбивка данных по компонентам агрегата.md
+    """
     last_char = set()
     for key in splitted_data:
         l = len(splitted_data[key])
