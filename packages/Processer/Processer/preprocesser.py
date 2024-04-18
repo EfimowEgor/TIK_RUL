@@ -36,6 +36,20 @@ def normilize(signal: np.ndarray):
 
     return signal
 
+# SMOOTHING
+# ----------
+def exponential_moving_average(data, window):
+    """
+    data: Сигнал, который нужно сгладить, 2-мерный массив.
+    window: Размер ядра свёртки
+    """
+    weights = np.exp(np.linspace(-1., 0., window))
+    weights /= weights.sum()
+    ema = np.convolve(data, weights, mode='full')[:len(data)]
+    ema[:window] = ema[window]
+    return ema
+
+
 # SQUASH DATA
 # ----------
 def compress(signals: pd.DataFrame, floor: str='30min', method='max'):
@@ -50,6 +64,6 @@ def compress(signals: pd.DataFrame, floor: str='30min', method='max'):
             return signals.groupby(signals.date.dt.floor(floor)).mean().drop('date', axis=1)
         case 'mixed':
             pass
-            # do i even need this case
+            raise NotImplementedError(f"Method {method} not implemented. Try max or mean.")
         case _:
             raise ValueError(f'Unknown method: {method}')
