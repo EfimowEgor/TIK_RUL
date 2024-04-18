@@ -90,7 +90,8 @@ def group(splitted_data: dict[str, list[str]],
 
     return grouped
 
-def get_components(data: list) -> list[np.ndarray]:
+# Нужно добавить имена компонент, чтобы можно было понимать, для каких компонент выполняется анализ
+def get_components(data: list) -> tuple[list[np.ndarray], list[str]]:
     """
     data: Список словарей, полученных из функции group - [group(), group(), ...]
 
@@ -114,4 +115,4 @@ def get_components(data: list) -> list[np.ndarray]:
                 component_mat = np.vstack([component_mat, data_row])
         res.append(component_mat)
 
-    return res
+    return res, dd.keys()
