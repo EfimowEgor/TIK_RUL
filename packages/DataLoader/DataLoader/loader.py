@@ -1,12 +1,10 @@
+from collections import defaultdict
+
 import numpy as np
 import pandas as pd
 
 from .component import Component
 
-# Read data using pd.read_csv() - slow, but in system we'll get data in real time
-
-# Read -> Fill empty cells -> save cleaned
-#                          -> Apply transforms -> save preprocessed
 def fill_empty(data: pd.DataFrame):
     """
     Fill empty cells with values from previous step.
@@ -91,3 +89,29 @@ def group(splitted_data: dict[str, list[str]],
                 grouped[char].update({key:splitted_data[key]})
 
     return grouped
+
+def get_components(data: list) -> list[np.ndarray]:
+    """
+    data: Список словарей, полученных из функции group - [group(), group(), ...]
+
+    Получение сигналов по компонентам агрегата. Все сигналы, относящиеся к одной компоненте в одну группу.
+    """
+    dd = defaultdict(list)
+    for d in (data.keys()):
+        for k_outer, v_outer in data[d].items():
+            for k_inner, v_inner in v_outer.items():
+                dd[k_inner].append(v_inner)
+
+    # res: Содержит подмассивы, в каждом из которых собраны все сигналы, относящиеся к одной компоненте
+    res = []
+    for key in dd.keys():
+        component_mat = np.array([])
+        for row in dd[key]:
+            data_row = np.array(row[len(row) // 2:])
+            if component_mat.size == 0:
+                component_mat = data_row
+            else:
+                component_mat = np.vstack([component_mat, data_row])
+        res.append(component_mat)
+
+    return res
