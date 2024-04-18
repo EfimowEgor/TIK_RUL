@@ -1,4 +1,4 @@
 from setuptools import setup
 
-setup(name="DataLoader",
+setup(name="Processer",
       version="1.0")
