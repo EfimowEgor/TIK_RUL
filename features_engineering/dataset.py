@@ -1,5 +1,7 @@
 import pandas as pd
 from centroid import centroid_descriptor
+from percentile import percentile_descriptor
+from variance import variance_descriptor
 from spread import spread_descriptor
 from skewness import skewness_descriptor
 from kurtosis import kurtosis_descriptor
@@ -29,13 +31,15 @@ def make_dataset(make_csv: bool = False):
         'slope': slope_descriptor,
         'mean': mean_descriptor,
         'std': std_descriptor,
+        'var': variance_descriptor,
+        **{f'percentile{i + 1}': percentile_descriptor[i] for i in range(100)},
         'moving_avg': moving_avg,
         'moving_std': moving_std,
         'ema': ema,
-        **{f'lag_{i+1}': lags[i] for i in range(10)},
-        **{f'lag_diff_{i+1}': lag_diffs[i] for i in range(10)},
+        **{f'lag_{i + 1}': lags[i] for i in range(10)},
+        **{f'lag_diff_{i + 1}': lag_diffs[i] for i in range(10)},
         'powers': pow_descriptor,
-        **{f'band_pow_{i*1000}_{(i+1)*1000}': band_pows[i] for i in range(30)},
+        **{f'band_pow_{i * 1000}_{(i + 1) * 1000}': band_pows[i] for i in range(30)},
         'peak_freqs': peak_freqs
     }
 
