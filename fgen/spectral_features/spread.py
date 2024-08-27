@@ -1,9 +1,8 @@
-from centroid import spectral_centroid
+from fgen.spectral_features.centroid import centroid
 import numpy as np
-from init import signal
 
-def spectral_spread(y: np.array, sr: float = 30000, frame_size: float = 2048, hop_size: float = 512):
-    centroids = spectral_centroid(y, sr, frame_size, hop_size)
+def spread(y: np.array, sr: float = 30000, frame_size: int = 2048, hop_size: int = 512) -> np.array:
+    centroids = centroid(y, sr, frame_size, hop_size)
 
     frames = np.lib.stride_tricks.sliding_window_view(y, frame_size)[::hop_size]
 
@@ -13,5 +12,3 @@ def spectral_spread(y: np.array, sr: float = 30000, frame_size: float = 2048, ho
     spreads = np.sqrt(np.sum(((frequencies - centroids[:, None]) ** 2) * spectrum, axis=1) / np.sum(spectrum, axis=1))
 
     return spreads
-
-spread_descriptor = spectral_spread(signal)
