@@ -1,11 +1,10 @@
-from centroid import spectral_centroid
-from spread import spectral_spread
+from fgen.spectral_features.centroid import centroid
+from fgen.spectral_features.spread import spread
 import numpy as np
-from init import signal
 
-def spectral_skewness(y: np.array, sr: float = 30000, frame_size: float = 2048, hop_size: float = 512):
-    centroids = spectral_centroid(y, sr, frame_size, hop_size)
-    spreads = spectral_spread(y, sr, frame_size, hop_size)
+def skewness(y: np.array, sr: float = 30000, frame_size: int = 2048, hop_size: int = 512) -> np.array:
+    centroids = centroid(y, sr, frame_size, hop_size)
+    spreads = spread(y, sr, frame_size, hop_size)
 
     frames = np.lib.stride_tricks.sliding_window_view(y, frame_size)[::hop_size]
 
@@ -16,5 +15,3 @@ def spectral_skewness(y: np.array, sr: float = 30000, frame_size: float = 2048, 
                 spreads ** 3 * np.sum(spectrum, axis=1))
 
     return skewnesses
-
-skewness_descriptor = spectral_skewness(signal)
