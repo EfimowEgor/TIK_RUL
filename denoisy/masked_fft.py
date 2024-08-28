@@ -1,10 +1,8 @@
 import numpy as np
-from timeline_params import sampling_rate
 
-
-def masked_fft(signal: np.array, low_cut: int):
+def masked_fft(signal: np.array, low_cut: int, sr: int = 3e4):
     spectrum = np.fft.fft(signal)
-    freqs = np.fft.fftfreq(len(spectrum), 1 / sampling_rate)
+    freqs = np.fft.fftfreq(len(spectrum), 1 / sr)
 
     mask = np.abs(freqs) > low_cut
 
